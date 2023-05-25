@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+        <h1>{{movie.title}}</h1>
+        <br>
+        예매율: {{movie.r_rate}}
+        <br>
+        현재상영중: {{movie.status}}
+        <br>
+        후기: {{movie.review}}
+        <br><br>
+        <a href="{% url 'home' %}">
+            <button style="margin-top:10px;">수정</button>
+        </a>
+    </div>
+    <div id="comment_container">
+        <h4>댓글 작성</h4>
+
+        <!-- 댓글 목록 -->
+        {% for comment in movie.comment_set.all %}
+        <div id="comment_index" style="padding:10px 30px 10px 50px;border-bottom: 1px solid rgb(206, 203, 203); display: flex;">
+            <div style="width:50%;">{{comment.comment}}</div>
+            <div style="width:20%;text-align:center;">익명</div>
+            <div style="width:30%;">{{comment.created_at}}</div>
+        </div>
+        {% endfor %}
+
+        <!-- 댓글 작성 -->
+        <form method="POST" action="{% url 'comment' movie.id %}">
+            {% csrf_token %}
+            <input type="text" placeholder="댓글을 달아주세요." name="comment">
+            <button type="submit">입력</button>
+        </form>
+        {% if user == movie.author %}
+        <a href="{% url 'edit' %}"><button>수정하기</button></a>
+        <a href="{% url 'delete' %}"><button>게시글 삭제</button></a>
+
+       
+        {% elif user.is_authenticated %}
+ 
+        {% endif %}
+    </div>
+    {% endblock %}
